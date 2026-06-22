@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Friends Dinner Planner</title>
+<style>
+*{box-sizing:border-box;font-family:Segoe UI,sans-serif}
+body{margin:0;background:linear-gradient(135deg,#0f172a,#1e293b);padding:20px}
+.container{max-width:900px;margin:auto;background:#fff;border-radius:20px;padding:25px}
+h1{text-align:center}
+label{font-weight:bold;display:block;margin-top:15px}
+select{width:100%;padding:10px;margin-top:5px}
+.food-box{margin-top:15px;background:#f4f4f4;padding:15px;border-radius:10px;max-height:350px;overflow:auto}
+button{width:100%;padding:14px;margin-top:20px;background:#25D366;color:#fff;border:none;border-radius:10px;font-size:18px}
+.summary{margin-top:15px;padding:10px;background:#eef}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>🍔 Friends Dinner Planner</h1>
+
+<label>Select Friend</label>
+<select id="friendName">
+<option value="">Choose Friend</option>
+<option>Sir Hassan Sajad Sahib</option>
+<option>Sajid Gujjar Sahib</option>
+<option>Tayyab Sahib</option>
+</select>
+
+<label>Select Time</label>
+<select id="time">
+<option value="">Choose Time</option>
+<option>6:00 PM</option>
+<option>7:00 PM</option>
+<option>8:00 PM</option>
+<option>9:00 PM</option>
+<option>10:00 PM</option>
+</select>
+
+<label>Select Place</label>
+<select id="place" onchange="loadFoods()">
+<option value="">Choose Place</option>
+<option value="Baagh-E-Zaitoon Restaurant">Baagh-E-Zaitoon Restaurant</option>
+<option value="Shafi Cuisine">Shafi Cuisine</option>
+<option value="Pyara Ice Cream">Pyara Ice Cream</option>
+<option value="Benazir Park">Benazir Park</option>
+</select>
+
+<div class="food-box" id="foods">Select a place first</div>
+<div class="summary" id="summary">Waiting for selection...</div>
+
+<button onclick="sendWhatsApp()">Send To WhatsApp</button>
+</div>
+
+<script>
+const menu={
+"Baagh-E-Zaitoon Restaurant":[
+"Tandoori Roti","Roghni Naan","Garlic Naan","Ginger Naan","Kalonji Naan","Tandoori Paratha",
+"Chicken Zaitoon Karahi","Chicken White Karahi","Chicken White Handi","Chicken Bagh-E-Zaitoon Handi",
+"Chicken Lahori Karahi","Chicken Chargha","Chicken Makhni","Chicken Ginger","Chicken Jalfrezi",
+"Chicken Achari Handi","Mutton Zaitoon Karahi","Mutton Lahori Karahi","Mutton Peshawari Karahi",
+"Malai Boti","Chicken Tikka Boti","Chicken Reshmi Kabab","BBQ Platter",
+"Chicken Biryani","Mutton Biryani","Chicken Pulao","Arabian Rice","Chicken Fried Rice"
+],
+"Shafi Cuisine":[
+"Grilled Burger","Zinger Burger","Crunchy Chicken Burger","Authentic Tortilla Wrap",
+"Chicken Tikka Pizza","Chicken Fajita Pizza","Shafi Special Loaded Pizza","4 Small Pizza Deal",
+"Matka Loaded Fries","Oven Baked Chicken Wings","Italian Pasta","Sting","Soft Drink","Chilled Juice","Shake"
+],
+"Pyara Ice Cream":[
+"Chocolate Ice Cream","Vanilla Ice Cream","Mango Ice Cream","Cone Ice Cream","Cup Ice Cream"
+],
+"Benazir Park":[
+"Golgappe","Khatta","Chaat"
+]
+};
+
+function loadFoods(){
+const place=document.getElementById("place").value;
+const foodDiv=document.getElementById("foods");
+if(!place){foodDiv.innerHTML="Select a place first";return;}
+foodDiv.innerHTML=menu[place].map(f=>`
+<label><input type="checkbox" value="${f}" onchange="updateSummary()"> ${f}</label><br>`).join('');
+updateSummary();
+}
+
+function updateSummary(){
+const foods=[...document.querySelectorAll('input[type=checkbox]:checked')].map(x=>x.value);
+document.getElementById("summary").innerHTML=foods.join(", ") || "No food selected";
+}
+
+function sendWhatsApp(){
+const friend=document.getElementById("friendName").value;
+const time=document.getElementById("time").value;
+const place=document.getElementById("place").value;
+const foods=[...document.querySelectorAll('input[type=checkbox]:checked')].map(x=>x.value);
+
+if(!friend||!time||!place){alert("Complete all fields");return;}
+
+const msg=`🍽 Friends Dinner Vote
+
+Friend: ${friend}
+Time: ${time}
+Place: ${place}
+
+Food:
+${foods.join(", ")}`;
+
+window.open(`https://wa.me/923156404554?text=${encodeURIComponent(msg)}`,"_blank");
+}
+</script>
+</body>
+</html>
